@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>FavoritosBR - Filmes</title>
+    <link rel="stylesheet" href="{% static 'FavoritosBR/css/style.css' %}">
+</head>
+<body>
+    <!-- Barra de navegação -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="{% static 'FavoritosBR/img/favoritosBR.svg' %}" alt="Logo FavoritosBR" class="logo">
+        </div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="{% url 'filmes' %}">Filmes</a>
+            <a href="/login/">Login</a>
+        </div>
+    </nav>
+
+    <!-- Header igual ao da home -->
+    <header class="site-header">
+        <div class="header-text">
+            <h1>🎞️ Lista de Filmes</h1>
+        </div>
+    </header>
+
+    <main>
+        <!-- Formulário para filtro de gênero -->
+        <form method="get">
+            <label for="genero">Gênero</label>
+            <select name="genero" id="genero" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="Romance" {% if genero == 'Romance' %}selected{% endif %}>Romance</option>
+                <option value="Ação" {% if genero == 'Ação' %}selected{% endif %}>Ação</option>
+                <option value="Drama" {% if genero == 'Drama' %}selected{% endif %}>Drama</option>
+                <option value="Comédia" {% if genero == 'Comédia' %}selected{% endif %}>Comédia</option>
+            </select>
+        </form>
+
+        <!-- Tabela de resultados -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Ano</th>
+                    <th>Gênero</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for filme in filmes %}
+                    <tr>
+                        <td>{{ filme.titulo }}</td>
+                        <td>{{ filme.ano }}</td>
+                        <td>{{ filme.genero }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">Nenhum filme encontrado para esse gênero.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
