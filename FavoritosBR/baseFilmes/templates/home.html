@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lista Curriculo</title>
+<link rel="stylesheet" href="{% static 'baseFilmes/css/estilo.css' %}">
+</head>
+<body>
+    <h1>Lista de Atividades</h1>
+	<table>
+	    <tr><th>Titulo</th><th>Idade</th><th>Atividade</th></tr>
+    	{% for atividade in atividades %}
+        	<tr>
+            	<td>{{ atividade.titulo }}</td><td>{{atividade.inicio }}</td><td>{{ atividade.fim }}</td>
+       	</tr>
+    	{% empty %}
+        	<tr><th colspan=“3">Ainda não tem atividades cadastradas</th></tr>
+    	{% endfor %}
+    </table>
+</body>
+</html>
