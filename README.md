@@ -16,3 +16,8 @@ O repositório servirá também como base para futuras melhorias, correções e 
 ## Status
 
 🚧 *Projeto em construção - fase inicial* 🚧
+
+## Comandos 
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
