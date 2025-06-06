@@ -9,10 +9,9 @@ O repositório servirá também como base para futuras melhorias, correções e 
 ## Integrantes
 
 - Hannah Goldstein  
-- Lucas Projeto  
-- Marcelle Projeto  
+- Lucas Monteiro  
+- Marcele Seixas
 - Rafael Paz  
-- Renan Projeto  
 
 ## Status
 
