@@ -1,53 +1,38 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>FavoritosBR - Início</title>
-    <link rel="stylesheet" href="{% static 'FavoritosBR/css/style.css' %}">
-</head>
-<body>
-    <!-- Barra de navegação -->
-    <nav class="navbar">
-        <div class="navbar-left">
-            <img src="{% static 'FavoritosBR/img/favoritosBR.svg' %}" alt="Logo FavoritosBR" class="logo">
-        </div>
-        <div class="navbar-links">
-            <a href="/">Home</a>
-            <a href="{% url 'filmes' %}">Filmes</a>
-            <a href="/login/">Login</a>
-        </div>
-    </nav>    
 
-    <header class="site-header">
-        <div class="header-text">
-            <h1>🎬 Bem-vindo ao FavoritosBR</h1>
-            <p>Um espaço para descobrir, curtir e favoritar os melhores filmes brasileiros!</p>
-            <p>Navegue pelo menu para explorar filmes, adicionar aos seus favoritos e conhecer mais sobre o cinema nacional.</p>
+{% block title %}FavoritosBR - Início{% endblock %}
+
+{% block content %}
+<header class="site-header">
+    <div class="header-text">
+        <h1>🎬 Bem-vindo ao FavoritosBR</h1>
+        <p>Um espaço para descobrir, curtir e favoritar os melhores filmes brasileiros!</p>
+        <p>Navegue pelo menu para explorar filmes, adicionar aos seus favoritos e conhecer mais sobre o cinema nacional.</p>
+        <p>Esse site está em desenvolvimento para a matéria Projeto de Software, sinta-se livre para fornecer feedbacks.</p>
+    </div>
+</header>
+
+<main>
+    <h2>Criadores</h2>
+
+    <section class="criadores">
+        <div class="criador">
+            <img src="{% static 'FavoritosBR/img/hannah.jpg' %}" alt="Hannah">
+            <p>Hannah</p>
         </div>
-    </header>
-
-    <main>
-        <h2>Criadores</h2>
-
-        <section class="criadores">
-            <div class="criador">
-                <img src="{% static 'FavoritosBR/img/hannah.jpg' %}" alt="Hannah">
-                <p>Hannah</p>
-            </div>
-            <div class="criador">
-                <img src="{% static 'FavoritosBR/img/marcele.jpg' %}" alt="Marcele">
-                <p>Marcele</p>
-            </div>
-            <div class="criador">
-                <img src="{% static 'FavoritosBR/img/rafael.jpg' %}" alt="Rafael">
-                <p>Rafael Paz</p>
-            </div>
-            <div class="criador">
-                <img src="{% static 'FavoritosBR/img/lucas.jpg' %}" alt="Lucas">
-                <p>Lucas</p>
-            </div>
-        </section>
-    </main>
-</body>
-</html>
+        <div class="criador">
+            <img src="{% static 'FavoritosBR/img/marcele.jpg' %}" alt="Marcele">
+            <p>Marcele</p>
+        </div>
+        <div class="criador">
+            <img src="{% static 'FavoritosBR/img/rafael.jpg' %}" alt="Rafael">
+            <p>Rafael Paz</p>
+        </div>
+        <div class="criador">
+            <img src="{% static 'FavoritosBR/img/lucas.jpg' %}" alt="Lucas">
+            <p>Lucas</p>
+        </div>
+    </section>
+</main>
+{% endblock %}

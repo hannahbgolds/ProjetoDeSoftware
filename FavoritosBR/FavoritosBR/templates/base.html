@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}FavoritosBR{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'FavoritosBR/css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="{% static 'FavoritosBR/img/favoritosBR.svg' %}" alt="Logo FavoritosBR" class="logoSite">
+        </div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="{% url 'filmes' %}">Filmes</a>
+            <a href="/login/">Login</a>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gire a Roleta{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'baseFilmes/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<header class="site-header">
+    <div class="header-text">
+        <h1>🎯 Roleta de Gêneros</h1>
+    </div>
+</header>
+
+<main>
+    <a href="{% url 'filmes' %}" class="botao-voltar">← Voltar para lista</a>
+
+    <p>Em breve: roleta dinâmica com animação 🎡</p>
+    <img src="{% static 'FavoritosBR/img/roleta_demo.png' %}" alt="Roleta" style="max-width: 300px;">
+</main>
+{% endblock %}

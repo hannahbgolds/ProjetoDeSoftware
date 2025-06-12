@@ -4,40 +4,6 @@ body {
     padding: 0;
 }
 
-.navbar {
-    background-color: #222;
-    color: #fff;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar-left {
-    display: flex;
-    align-items: center;
-}
-
-.logo {
-    height: 40px;
-    width: auto;
-}
-
-.navbar-links {
-    display: flex;
-    gap: 20px;
-}
-
-.navbar-links a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.navbar-links a:hover {
-    text-decoration: underline;
-}
-
 header, main {
     text-align: center;
     padding: 20px;
@@ -76,4 +42,32 @@ th, td {
 
 th {
     background-color: #f2f2f2;
+}
+
+.botao-roleta, .botao-voltar {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #006400;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.botao-roleta:hover, .botao-voltar:hover {
+    background-color: #228B22;
+}
+
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+}
+
+.header-text {
+    text-align: center;
 }

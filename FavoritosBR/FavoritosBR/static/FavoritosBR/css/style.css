@@ -18,7 +18,7 @@ body {
     align-items: center;
 }
 
-.logo {
+.logoSite {
     height: 40px;
     width: auto;
 }
@@ -41,15 +41,10 @@ body {
 .site-header {
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 20px;
     background-color: #f4f4f4;
     border-bottom: 1px solid #ccc;
-}
-
-.logo {
-    width: 80px;
-    height: auto;
-    margin-right: 20px;
 }
 
 .header-text {
