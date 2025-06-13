@@ -5,6 +5,11 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'baseFilmes/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'baseFilmes/roleta/style.css' %}">
+    <link rel="stylesheet" href="{% static 'baseFilmes/roleta/styleModal.css' %}">
+    <script src="{% static 'baseFilmes/roleta/jquery-3.4.1.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <script src="{% static 'baseFilmes/roleta/js.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -17,7 +22,38 @@
 <main>
     <a href="{% url 'filmes' %}" class="botao-voltar">← Voltar para lista</a>
 
-    <p>Em breve: roleta dinâmica com animação 🎡</p>
-    <img src="{% static 'FavoritosBR/img/roleta_demo.png' %}" alt="Roleta" style="max-width: 300px;">
+    <div class="area">
+        <div class="seta"></div>
+        <div class="roleta" id="roleta">
+            {% for i in "123456789" %}
+                <div class="box" id="box{{ i }}"></div>
+            {% endfor %}
+
+            <div class="genero genero1" id="opt1">Aventura</div>
+            <div class="genero genero2" id="opt0">Ação</div>
+            <div class="genero genero3" id="opt7">Comédia</div>
+            <div class="genero genero4" id="opt6">Drama</div>
+            <div class="genero genero5" id="opt5">Fantasia</div>
+            <div class="genero genero6" id="opt4">Faroeste</div>
+            <div class="genero genero7" id="opt3">Suspense</div>
+            <div class="genero genero8" id="opt2">Diverso</div>
+
+            <div id="btJogar" class="btnRoleta play" onclick="girarRoleta()">
+                <img src="https://img.icons8.com/bubbles/100/000000/play.png">
+            </div>
+            <div id="btParar" class="btnRoleta stop" onclick="pararRoleta()">
+                <img src="https://img.icons8.com/bubbles/100/000000/stop.png">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal (pop-up com resultado) -->
+    <div id="ex1" class="modal">
+        <img src="" alt="Clique para fechar" id="imgModal">
+        <h3 id="tituloModal">titulo aqui</h3>
+        <p id="sinopseModal"></p>
+        <p id="diretorModal"></p>
+        <p id="lancamentoModal"></p>
+    </div>
 </main>
 {% endblock %}

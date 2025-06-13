@@ -5,7 +5,7 @@ body {
 }
 
 header, main {
-    text-align: left;
+    text-align: center;
     padding: 20px;
 }
 
@@ -69,5 +69,5 @@ th {
 }
 
 .header-text {
-    text-align: center;
+    text-align: left;
 }
