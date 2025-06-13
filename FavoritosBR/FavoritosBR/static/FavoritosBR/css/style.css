@@ -41,7 +41,7 @@ body {
 .site-header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     padding: 20px;
     background-color: #f4f4f4;
     border-bottom: 1px solid #ccc;
