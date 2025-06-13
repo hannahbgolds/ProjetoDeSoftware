@@ -1,0 +1,8 @@
+FilmeDeUmUsuario{
+    username: string
+    titulo: string
+    status: "não-assitistido" | "assistido"
+    nota: int 0 a 5 
+    created-at 
+    assistiu-at 
+ }
