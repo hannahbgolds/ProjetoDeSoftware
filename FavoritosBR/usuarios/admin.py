@@ -1,3 +1,4 @@
 from django.contrib import admin
+from usuarios.models import FilmeDeUmUsuario
 
-# Register your models here.
+admin.site.register(FilmeDeUmUsuario)
