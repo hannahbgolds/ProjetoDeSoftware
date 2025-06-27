@@ -15,40 +15,33 @@
 </header>
 
 <main>
-    <a href="{% url 'filmes_roleta' %}" class="botao-roleta">🎲 Girar roleta</a>
-
-    <form method="get">
-        <label for="genero">Gênero</label>
-        <select name="genero" id="genero" onchange="this.form.submit()">
-            <option value="">Todos</option>
-            <option value="Romance" {% if genero == 'Romance' %}selected{% endif %}>Romance</option>
-            <option value="Ação" {% if genero == 'Ação' %}selected{% endif %}>Ação</option>
-            <option value="Drama" {% if genero == 'Drama' %}selected{% endif %}>Drama</option>
-            <option value="Comédia" {% if genero == 'Comédia' %}selected{% endif %}>Comédia</option>
-        </select>
-    </form>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Ano</th>
-                <th>Gênero</th>
-            </tr>
-        </thead>
-        <tbody>
+        <a href="{% url 'filmes_roleta' %}" class="botao-roleta">🎲 Girar roleta</a>
+    
+        <form method="get">
+            <label for="genero">Gênero</label>
+            <select name="genero" id="genero" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="Romance" {% if genero == 'Romance' %}selected{% endif %}>Romance</option>
+                <option value="Ação" {% if genero == 'Ação' %}selected{% endif %}>Ação</option>
+                <option value="Drama" {% if genero == 'Drama' %}selected{% endif %}>Drama</option>
+                <option value="Comédia" {% if genero == 'Comédia' %}selected{% endif %}>Comédia</option>
+            </select>
+        </form>
+    
+        <div class="filmes-grid">
             {% for filme in filmes %}
-                <tr>
-                    <td>{{ filme.titulo }}</td>
-                    <td>{{ filme.ano }}</td>
-                    <td>{{ filme.genero }}</td>
-                </tr>
+                <div class="filme-card">
+                    {% if filme.poster %}
+                        <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
+                    {% else %}
+                        <div class="poster-placeholder">Sem imagem</div>
+                    {% endif %}
+                    <h3>{{ filme.titulo }}</h3>
+                    <p>{{ filme.ano }}</p>
+                </div>
             {% empty %}
-                <tr>
-                    <td colspan="3">Nenhum filme encontrado para esse gênero.</td>
-                </tr>
+                <p>Nenhum filme encontrado para esse gênero.</p>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>        
 </main>
 {% endblock %}
