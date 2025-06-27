@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 from FavoritosBR import views
+from django.contrib.auth.views import LogoutView
+from FavoritosBR.views import custom_logout
 
 
 urlpatterns = [
@@ -26,4 +28,5 @@ urlpatterns = [
     path('home', views.home, name='home'), 
     path("baseFilmes/", include('baseFilmes.urls')),
     path("usuarios/", include('usuarios.urls')),
+    path('logout/', custom_logout, name='logout'),
 ]
