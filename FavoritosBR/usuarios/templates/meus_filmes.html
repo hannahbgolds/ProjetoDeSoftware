@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Meus Filmes</h2>
+
+<h3>⭐ Favoritados</h3>
+<ul>
+  {% for filme in favoritos %}
+    <li>{{ filme.titulo }} ({{ filme.data_favoritado|date:"d/m/Y" }})</li>
+  {% empty %}
+    <li>Você ainda não favoritou nenhum filme.</li>
+  {% endfor %}
+</ul>
+
+<h3>🎬 Assistidos</h3>
+<ul>
+  {% for filme in assistidos %}
+    <li>{{ filme.titulo }} ({{ filme.data_assistido|date:"d/m/Y" }})</li>
+  {% empty %}
+    <li>Você ainda não marcou filmes como assistidos.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
