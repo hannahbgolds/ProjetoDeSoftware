@@ -5,6 +5,12 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 import requests
 from django.shortcuts import render
+from django.http import JsonResponse
+from usuarios.models import FilmeDeUmUsuario
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 TMDB_API_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMWQ1MDExZGNkYWI3ZjU0OGRhNDM4ZmRhMjRjN2ViZCIsIm5iZiI6MTc1MDk5MTcxMC44NTY5OTk5LCJzdWIiOiI2ODVlMDM1ZWMwNjZhNDk0YzEzNGYyZDEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.bc5-4RE8_UXxp5d617Cw2LJfowA3x70_z_rVrU3hsa8"
 
@@ -51,3 +57,19 @@ def filmes_lista(request):
 
 def filmes_roleta(request):
     return render(request, "filmes_roleta.html")
+
+@csrf_exempt
+@login_required
+def marcar_nao_assistido(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        titulo = data.get("titulo")
+        username = request.user.username
+
+        filme, created = FilmeDeUmUsuario.objects.get_or_create(
+            username=username,
+            titulo=titulo,
+            defaults={"status": "nao-assistido", "nota": 0}
+        )
+        return JsonResponse({"sucesso": True, "ja_existia": not created})
+    return JsonResponse({"sucesso": False}, status=400)

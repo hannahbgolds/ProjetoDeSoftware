@@ -5,6 +5,17 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'baseFilmes/css/style.css' %}">
+    <style>
+        .botao-estrela {
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 16px !important;
+            height: 16px !important;
+        }
+        .botao-estrela:hover {
+            transform: scale(1.1);
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -15,33 +26,77 @@
 </header>
 
 <main>
-        <a href="{% url 'filmes_roleta' %}" class="botao-roleta">🎲 Girar roleta</a>
-    
-        <form method="get">
-            <label for="genero">Gênero</label>
-            <select name="genero" id="genero" onchange="this.form.submit()">
-                <option value="">Todos</option>
-                <option value="Romance" {% if genero == 'Romance' %}selected{% endif %}>Romance</option>
-                <option value="Ação" {% if genero == 'Ação' %}selected{% endif %}>Ação</option>
-                <option value="Drama" {% if genero == 'Drama' %}selected{% endif %}>Drama</option>
-                <option value="Comédia" {% if genero == 'Comédia' %}selected{% endif %}>Comédia</option>
-            </select>
-        </form>
-    
-        <div class="filmes-grid">
-            {% for filme in filmes %}
-                <div class="filme-card">
-                    {% if filme.poster %}
-                        <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
-                    {% else %}
-                        <div class="poster-placeholder">Sem imagem</div>
-                    {% endif %}
-                    <h3>{{ filme.titulo }}</h3>
-                    <p>{{ filme.ano }}</p>
-                </div>
-            {% empty %}
-                <p>Nenhum filme encontrado para esse gênero.</p>
-            {% endfor %}
-        </div>        
+    <a href="{% url 'filmes_roleta' %}" class="botao-roleta">🎲 Girar roleta</a>
+
+    <form method="get">
+        <label for="genero">Gênero</label>
+        <select name="genero" id="genero" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            <option value="Romance" {% if genero == 'Romance' %}selected{% endif %}>Romance</option>
+            <option value="Ação" {% if genero == 'Ação' %}selected{% endif %}>Ação</option>
+            <option value="Drama" {% if genero == 'Drama' %}selected{% endif %}>Drama</option>
+            <option value="Comédia" {% if genero == 'Comédia' %}selected{% endif %}>Comédia</option>
+        </select>
+    </form>
+
+    <div class="filmes-grid">
+        {% for filme in filmes %}
+            <div class="filme-card">
+                {% if filme.poster %}
+                    <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
+                {% else %}
+                    <div class="poster-placeholder">Sem imagem</div>
+                {% endif %}
+                <h3>
+                    {{ filme.titulo }}
+                    <img
+                        src="{% static 'baseFilmes/img/estrelaVazia.png' %}"
+                        class="botao-estrela"
+                        data-titulo="{{ filme.titulo }}"
+                        data-ativo="false"
+                        alt="Marcar como não assistido"
+                    />
+                </h3>
+                <p>{{ filme.ano }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhum filme encontrado para esse gênero.</p>
+        {% endfor %}
+    </div>
 </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".botao-estrela").forEach(botao => {
+        botao.addEventListener("click", e => {
+            e.preventDefault();
+            const titulo = botao.getAttribute("data-titulo");
+
+            fetch("{% url 'marcar_nao_assistido' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: JSON.stringify({ titulo })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const ativo = botao.getAttribute("data-ativo") === "true";
+                    if (ativo) {
+                        botao.setAttribute("src", "{% static 'baseFilmes/img/estrelaVazia.png' %}");
+                        botao.setAttribute("data-ativo", "false");
+                    } else {
+                        botao.setAttribute("src", "https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png");
+                        botao.setAttribute("data-ativo", "true");
+                    }
+                } else {
+                    alert("Erro ao marcar como não assistido.");
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}
