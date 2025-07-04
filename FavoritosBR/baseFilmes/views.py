@@ -62,14 +62,22 @@ def filmes_roleta(request):
 @login_required
 def marcar_nao_assistido(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        titulo = data.get("titulo")
-        username = request.user.username
+        try:
+            data = json.loads(request.body)
+            titulo = data.get("titulo")
+            username = request.user.username  
 
-        filme, created = FilmeDeUmUsuario.objects.get_or_create(
-            username=username,
-            titulo=titulo,
-            defaults={"status": "nao-assistido", "nota": 0}
-        )
-        return JsonResponse({"sucesso": True, "ja_existia": not created})
-    return JsonResponse({"sucesso": False}, status=400)
+            filme, created = FilmeDeUmUsuario.objects.get_or_create(
+                username=username,
+                titulo=titulo,
+                defaults={
+                    "status": "nao-assistido",
+                    "nota": 0
+                }
+            )
+
+            return JsonResponse({"sucesso": True, "ja_existia": not created})
+        except Exception as e:
+            return JsonResponse({"sucesso": False, "erro": str(e)}, status=400)
+
+    return JsonResponse({"sucesso": False, "erro": "Método não permitido"}, status=405)
