@@ -29,4 +29,5 @@ urlpatterns = [
     path("baseFilmes/", include('baseFilmes.urls')),
     path("usuarios/", include('usuarios.urls')),
     path('logout/', custom_logout, name='logout'),
+    path('usuarios/', include('usuarios.urls')),
 ]

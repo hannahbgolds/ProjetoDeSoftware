@@ -1,11 +1,24 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import FilmeDeUmUsuario
+
+@login_required
+def meus_filmes(request):
+    user = request.user
+
+    favoritos = FilmeDeUmUsuario.objects.filter(user=user, status='nao-assistido').order_by('-created_at')
+    assistidos = FilmeDeUmUsuario.objects.filter(user=user, status='assistido').order_by('-assistiu_at')
+
+    return render(request, 'meus_filmes.html', {
+        'favoritos': favoritos,
+        'assistidos': assistidos,
+    })
 
 def login_view(request):
     if request.method == 'POST':

@@ -21,6 +21,7 @@ GENRE_MAP = {
     "Romance": 10749
 }
 
+@login_required
 def filmes_lista(request):
     genero_nome = request.GET.get("genero")
     genero_id = GENRE_MAP.get(genero_nome)
@@ -41,13 +42,21 @@ def filmes_lista(request):
     response = requests.get(url, headers=headers, params=params)
     data = response.json()
 
+    filmes_favoritados_ids = set(
+        FilmeDeUmUsuario.objects.filter(user=request.user, status='nao-assistido')
+        .values_list('filme_id_api', flat=True)
+    )
+
     filmes = []
     for filme in data.get("results", []):
+        id_api = filme.get("id")
         filmes.append({
             "titulo": filme.get("title"),
+            "filme_id_api": id_api,
             "ano": filme.get("release_date", "")[:4],
             "genero": genero_nome or "Vários",
-            "poster": f"https://image.tmdb.org/t/p/w200{filme.get('poster_path')}" if filme.get("poster_path") else None
+            "poster": f"https://image.tmdb.org/t/p/w200{filme.get('poster_path')}" if filme.get("poster_path") else None,
+            "favoritado": id_api in filmes_favoritados_ids
         })
 
     return render(request, "filmes_lista.html", {
@@ -65,19 +74,24 @@ def marcar_nao_assistido(request):
         try:
             data = json.loads(request.body)
             titulo = data.get("titulo")
-            username = request.user.username  
+            filme_id = data.get("filme_id_api")
+
+            if not titulo or not filme_id:
+                return JsonResponse({"erro": "Campos obrigatórios faltando."}, status=400)
 
             filme, created = FilmeDeUmUsuario.objects.get_or_create(
-                username=username,
-                titulo=titulo,
+                user=request.user,
+                filme_id_api=filme_id,
                 defaults={
-                    "status": "nao-assistido",
-                    "nota": 0
+                    'titulo': titulo,
+                    'status': 'nao-assistido'
                 }
             )
 
             return JsonResponse({"sucesso": True, "ja_existia": not created})
-        except Exception as e:
-            return JsonResponse({"sucesso": False, "erro": str(e)}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"erro": "JSON inválido."}, status=400)
 
-    return JsonResponse({"sucesso": False, "erro": "Método não permitido"}, status=405)
+    return JsonResponse({"erro": "Método não permitido."}, status=405)
+
+

@@ -50,12 +50,17 @@
                 <h3>
                     {{ filme.titulo }}
                     <img
-                        src="{% static 'baseFilmes/img/estrelaVazia.png' %}"
-                        class="botao-estrela"
-                        data-titulo="{{ filme.titulo }}"
-                        data-ativo="false"
-                        alt="Marcar como não assistido"
-                    />
+    src="{% if filme.favoritado %}
+             https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png
+         {% else %}
+             {% static 'baseFilmes/img/estrelaVazia.png' %}
+         {% endif %}"
+    class="botao-estrela"
+    data-titulo="{{ filme.titulo }}"
+    data-filme-id="{{ filme.filme_id_api }}"
+    data-ativo="{% if filme.favoritado %}true{% else %}false{% endif %}"
+    alt="Marcar como não assistido"
+/>
                 </h3>
                 <p>{{ filme.ano }}</p>
             </div>
@@ -71,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         botao.addEventListener("click", e => {
             e.preventDefault();
             const titulo = botao.getAttribute("data-titulo");
+            const filme_id = botao.getAttribute("data-filme-id");
 
             fetch("{% url 'marcar_nao_assistido' %}", {
                 method: "POST",
@@ -78,7 +84,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}",
                 },
-                body: JSON.stringify({ titulo })
+                body: JSON.stringify({
+                    titulo: titulo,
+                    filme_id_api: parseInt(filme_id)
+                })
             })
             .then(response => response.json())
             .then(data => {
