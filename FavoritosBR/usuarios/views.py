@@ -53,6 +53,14 @@ def marcar_como_assistido(request):
             filme = FilmeDeUmUsuario.objects.get(user=request.user, filme_id_api=filme_id)
             filme.status = "assistido"
             filme.assistiu_at = timezone.now()
+
+            nota = data.get("nota")
+            if nota is not None:
+                try:
+                    filme.nota = int(nota)
+                except ValueError:
+                    pass 
+
             filme.save()
 
             return JsonResponse({"sucesso": True})
