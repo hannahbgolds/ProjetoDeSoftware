@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             const titulo = botao.getAttribute("data-titulo");
             const filme_id = botao.getAttribute("data-filme-id");
+            const poster_url = botao.closest(".filme-card").querySelector("img")?.src;
 
             fetch("{% url 'marcar_nao_assistido' %}", {
                 method: "POST",
@@ -86,7 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({
                     titulo: titulo,
-                    filme_id_api: parseInt(filme_id)
+                    filme_id_api: parseInt(filme_id),
+                    poster_url: poster_url
                 })
             })
             .then(response => response.json())

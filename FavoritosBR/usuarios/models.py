@@ -12,6 +12,7 @@ class FilmeDeUmUsuario(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="filmes")
     filme_id_api = models.IntegerField()  # ID do TMDb
     titulo = models.CharField(max_length=255)
+    poster = models.URLField(max_length=500, blank=True, null=True)  # ✅ novo campo
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='nao-assistido')
     nota = models.IntegerField(choices=[(i, i) for i in range(0, 6)], blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -22,3 +23,4 @@ class FilmeDeUmUsuario(models.Model):
 
     def __str__(self):
         return f"{self.titulo} - {self.user.username} ({self.status})"
+

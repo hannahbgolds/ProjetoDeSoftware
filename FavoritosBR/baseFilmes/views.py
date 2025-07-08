@@ -75,23 +75,26 @@ def marcar_nao_assistido(request):
             data = json.loads(request.body)
             titulo = data.get("titulo")
             filme_id = data.get("filme_id_api")
+            poster_url = data.get("poster_url")
 
             if not titulo or not filme_id:
                 return JsonResponse({"erro": "Campos obrigatórios faltando."}, status=400)
 
-            filme, created = FilmeDeUmUsuario.objects.get_or_create(
-                user=request.user,
-                filme_id_api=filme_id,
-                defaults={
-                    'titulo': titulo,
-                    'status': 'nao-assistido'
-                }
-            )
+            try:
+                filme = FilmeDeUmUsuario.objects.get(user=request.user, filme_id_api=filme_id, status="nao-assistido")
+                filme.delete()  
+                return JsonResponse({"sucesso": True, "removido": True})
+            except FilmeDeUmUsuario.DoesNotExist:
+                FilmeDeUmUsuario.objects.create(
+                    user=request.user,
+                    filme_id_api=filme_id,
+                    titulo=titulo,
+                    status='nao-assistido',
+                    poster=poster_url
+                )
+                return JsonResponse({"sucesso": True, "removido": False})
 
-            return JsonResponse({"sucesso": True, "ja_existia": not created})
         except json.JSONDecodeError:
             return JsonResponse({"erro": "JSON inválido."}, status=400)
 
     return JsonResponse({"erro": "Método não permitido."}, status=405)
-
-

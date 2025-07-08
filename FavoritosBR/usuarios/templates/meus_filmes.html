@@ -1,27 +1,67 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Meus Filmes{% endblock %}
 
 {% block content %}
-<h2>Meus Filmes</h2>
+<h1>Meus Filmes</h1>
 
-<h3>⭐ Favoritados</h3>
+<h2>⭐ Favoritados</h2>
 <ul>
-  {% for filme in favoritos %}
-    <li>{{ filme.titulo }} ({{ filme.created_at|date:"d/m/Y" }})</li>
-  {% empty %}
-    <li>Você ainda não favoritou nenhum filme.</li>
-  {% endfor %}
-</ul>
-
-<h3>🎬 Assistidos</h3>
-<ul>
-  {% for filme in assistidos %}
-    <li>
-      {{ filme.titulo }}
-      {% if filme.nota is not None %} - Nota: {{ filme.nota }} {% endif %}
-      ({{ filme.assistiu_at|date:"d/m/Y" }})
+{% for filme in favoritos %}
+    <li style="margin-bottom: 1em;">
+        {% if filme.poster %}
+            <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}" style="height: 100px;">
+        {% endif %}
+        <strong>{{ filme.titulo }}</strong> ({{ filme.created_at|date:"d/m/Y" }})
+        <button class="marcar-assistido" data-filme-id="{{ filme.filme_id_api }}">✅ Marcar como assistido</button>
     </li>
-  {% empty %}
-    <li>Você ainda não marcou filmes como assistidos.</li>
-  {% endfor %}
+{% empty %}
+    <li>Você ainda não favoritou filmes.</li>
+{% endfor %}
 </ul>
+
+<h2>🎬 Assistidos</h2>
+<ul>
+{% for filme in assistidos %}
+    <li style="margin-bottom: 1em;">
+        {% if filme.poster %}
+      <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}" style="height: 100px;">
+        {% else %}
+      <div style="height: 100px; width: 70px; background: #eee;">Sem imagem</div>
+        {% endif %}
+        <strong>{{ filme.titulo }}</strong> ({{ filme.assistiu_at|date:"d/m/Y" }})
+    </li>
+{% empty %}
+    <li>Você ainda não marcou filmes como assistidos.</li>
+{% endfor %}
+</ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".marcar-assistido").forEach(botao => {
+        botao.addEventListener("click", () => {
+            const filme_id = botao.getAttribute("data-filme-id");
+
+            fetch("{% url 'marcar_como_assistido' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ filme_id_api: parseInt(filme_id) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucesso) {
+                    location.reload();
+                } else {
+                    alert("Erro ao marcar como assistido.");
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}
+
