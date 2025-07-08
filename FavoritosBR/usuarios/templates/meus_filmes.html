@@ -1,41 +1,69 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Meus Filmes{% endblock %}
+{% block title %}FavoritosBR - Meus Filmes{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'baseFilmes/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Meus Filmes</h1>
+<header class="site-header">
+    <div class="header-text">
+      {% if aba == "favoritos" %}
+        <h1>⭐ Favoritos</h1>
+      {% else %}
+        <h1>✅ Assistidos</h1>
+      {% endif %}
+    </div>
+</header>
 
-<h2>⭐ Favoritados</h2>
-<ul>
-{% for filme in favoritos %}
-    <li style="margin-bottom: 1em;">
-        {% if filme.poster %}
-            <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}" style="height: 100px;">
-        {% endif %}
-        <strong>{{ filme.titulo }}</strong> ({{ filme.created_at|date:"d/m/Y" }})
-        <button class="marcar-assistido" data-filme-id="{{ filme.filme_id_api }}">✅ Marcar como assistido</button>
-    </li>
-{% empty %}
-    <li>Você ainda não favoritou filmes.</li>
-{% endfor %}
-</ul>
-
-<h2>🎬 Assistidos</h2>
-<ul>
-{% for filme in assistidos %}
-    <li style="margin-bottom: 1em;">
-        {% if filme.poster %}
-      <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}" style="height: 100px;">
+<main>
+    <div style="margin-bottom: 1em;">
+        {% if aba == "favoritos" %}
+            <a href="?aba=assistidos" class="botao-roleta">✅ Ver Assistidos</a>
         {% else %}
-      <div style="height: 100px; width: 70px; background: #eee;">Sem imagem</div>
+            <a href="?aba=favoritos" class="botao-roleta">⭐ Ver Favoritos</a>
         {% endif %}
-        <strong>{{ filme.titulo }}</strong> ({{ filme.assistiu_at|date:"d/m/Y" }})
-    </li>
-{% empty %}
-    <li>Você ainda não marcou filmes como assistidos.</li>
-{% endfor %}
-</ul>
+    </div>
+
+    {% if aba == "favoritos" %}
+        <div class="filmes-grid">
+            {% for filme in favoritos %}
+                <div class="filme-card">
+                    {% if filme.poster %}
+                        <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
+                    {% else %}
+                        <div class="poster-placeholder">Sem imagem</div>
+                    {% endif %}
+                    <h3>{{ filme.titulo }}</h3>
+                    <p>{{ filme.created_at|date:"d/m/Y" }}</p>
+                    <button class="marcar-assistido" data-filme-id="{{ filme.filme_id_api }}">
+                        ✅ Marcar como assistido
+                    </button>
+                </div>
+            {% empty %}
+                <p>Você ainda não favoritou filmes.</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="filmes-grid">
+            {% for filme in assistidos %}
+                <div class="filme-card">
+                    {% if filme.poster %}
+                        <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
+                    {% else %}
+                        <div class="poster-placeholder">Sem imagem</div>
+                    {% endif %}
+                    <h3>{{ filme.titulo }}</h3>
+                    <p>{{ filme.assistiu_at|date:"d/m/Y" }}</p>
+                </div>
+            {% empty %}
+                <p>Você ainda não marcou filmes como assistidos.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</main>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -64,4 +92,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 {% endblock %}
-

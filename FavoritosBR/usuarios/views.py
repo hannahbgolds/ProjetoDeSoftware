@@ -8,11 +8,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import FilmeDeUmUsuario
 from django.views.decorators.csrf import csrf_exempt
+import json
+from django.http import JsonResponse
 from django.utils import timezone
-
 
 @login_required
 def meus_filmes(request):
+    aba = request.GET.get("aba", "favoritos")
     user = request.user
 
     favoritos = FilmeDeUmUsuario.objects.filter(user=user, status='nao-assistido').order_by('-created_at')
@@ -21,7 +23,9 @@ def meus_filmes(request):
     return render(request, 'meus_filmes.html', {
         'favoritos': favoritos,
         'assistidos': assistidos,
+        'aba': aba
     })
+
 
 def login_view(request):
     if request.method == 'POST':
