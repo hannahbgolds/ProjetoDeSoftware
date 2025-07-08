@@ -43,7 +43,7 @@ def filmes_lista(request):
     data = response.json()
 
     filmes_favoritados_ids = set(
-        FilmeDeUmUsuario.objects.filter(user=request.user, status='nao-assistido')
+        FilmeDeUmUsuario.objects.filter(user=request.user)
         .values_list('filme_id_api', flat=True)
     )
 
@@ -80,21 +80,21 @@ def marcar_nao_assistido(request):
             if not titulo or not filme_id:
                 return JsonResponse({"erro": "Campos obrigatórios faltando."}, status=400)
 
-            try:
-                filme = FilmeDeUmUsuario.objects.get(user=request.user, filme_id_api=filme_id, status="nao-assistido")
-                filme.delete()  
+            filme_obj = FilmeDeUmUsuario.objects.filter(user=request.user, filme_id_api=filme_id).first()
+
+            if filme_obj:
+                filme_obj.delete()
                 return JsonResponse({"sucesso": True, "removido": True})
-            except FilmeDeUmUsuario.DoesNotExist:
+            else:
                 FilmeDeUmUsuario.objects.create(
                     user=request.user,
-                    filme_id_api=filme_id,
                     titulo=titulo,
-                    status='nao-assistido',
-                    poster=poster_url
+                    filme_id_api=filme_id,
+                    poster=poster_url,
+                    status='nao-assistido'
                 )
                 return JsonResponse({"sucesso": True, "removido": False})
 
         except json.JSONDecodeError:
             return JsonResponse({"erro": "JSON inválido."}, status=400)
-
     return JsonResponse({"erro": "Método não permitido."}, status=405)
