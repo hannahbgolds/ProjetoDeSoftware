@@ -1,220 +1,96 @@
-/* 
-* * * * * * * * * * * * * * * * 
-* Função para girar a roleta. *
-* * * * * * * * * * * * * * * *  
-*/
+let globalObjects = {};
 
-function girarRoleta() {  
-  //declação global das variáveis para roleta e dos botões de play e stop. 
-  globalObjects = {
-      btJogar: document.getElementById("btJogar"),
-      roleta: document.getElementById("roleta"),
-      btParar: document.getElementById("btParar")
-  }
-  
-  //inicializar o atributo src vazia
-  document.getElementById("imgModal").src = "";
-  //instânciar objeto data
-  globalObjects.tempoInicial = new Date();
-  //Ocultar o botão de jogar 
-  globalObjects.btJogar.style.visibility = "hidden";
-  //Mostrar o botão de parar
-  globalObjects.btParar.style.visibility = "visible";
-  //Animação da roleta - Uma volta completa em 1 segundos de forma initerrupta
-  globalObjects.roleta.style.animation = "roleta 1s linear infinite";
+function girarRoleta() {
+    globalObjects = {
+        btJogar: document.getElementById("btJogar"),
+        roleta: document.getElementById("roleta"),
+        btParar: document.getElementById("btParar"),
+        tempoInicial: new Date()
+    };
+
+    document.getElementById("imgModal").src = "";
+    globalObjects.btJogar.style.visibility = "hidden";
+    globalObjects.btParar.style.visibility = "visible";
+    globalObjects.roleta.style.animation = "roleta 1s linear infinite";
 }
-
-/* 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* Função para calcular em qual box estará quando a roleta parar de rodar  *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*/
 
 function calcularBox() {
-//calcular quanto tempo a roleta está girando
-  var tempoFinal = new Date();
-  var tempo = Math.abs(tempoFinal - globalObjects.tempoInicial);
-//calcular quanto tempo demora em cada box 125 = 1000ms / QNTIDADEBOX)
-  var box = parseInt(tempo / 125);
-//tratativa caso a roleta dê mais de uma volta
-  if (box > 7)
-      box = parseInt(box % 8);
-  return box;
+    const tempoFinal = new Date();
+    const tempo = Math.abs(tempoFinal - globalObjects.tempoInicial);
+    let box = parseInt(tempo / 125);
+    box = box % 8;
+    return box;
 }
-
-/* 
-* * * * * * * * * * * * * * * * 
-* Função para parar a roleta  *
-* * * * * * * * * * * * * * * * 
-*/
 
 function pararRoleta() {
-//pausar a animação e mostrar o botão de play  
   globalObjects.roleta.style["animation-play-state"] = "paused";
   globalObjects.btJogar.style.visibility = "visible";
-
-//chamar a função calcularBox()
-  var box = calcularBox();
-
-//Condicional para chamar a rota referente ao box selecionado  
-  if(box == 0){
-  //Chamada da API
-    $.ajax({
-      //rota
-      url:"http://localhost:3001/acao",
-      //retornar JSON
-      dataType: 'json',
-      success: function(item){
-      
-      //Função para sortear um número referente ao índice do vetor).
-      var indice = Math.floor(Math.random() * (item.length));
-      
-
-      //Input das informações na interface
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DATA_LANCAMENTO;
-      
-      }    
-  })
-}
-  else if(box == 1){
-    $.ajax({
-      url:"http://localhost:3001/aventura",
-      dataType: 'json',
-      success: function(item){
-      
-      var indice = Math.floor(Math.random() * (item.length));
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DATA_LANCAMENTO;
-      
-      }    
-  })
-  
-  }
-  else if(box == 2){
-    $.ajax({
-      url:"http://localhost:3001/view",
-      dataType: 'json',
-      success: function(item){
-      
-      var indice = Math.floor(Math.random() * (item.length));
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DT_LANCAMENTO;
-      
-      }    
-  })
-  
-  }
-  else if(box == 3){
-    $.ajax({
-      url:"http://localhost:3001/suspense",
-      dataType: 'json',
-      success: function(item){
-      
-      var indice = Math.floor(Math.random() * (item.length));
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DATA_LANCAMENTO;
-      
-      }    
-  })
-  }
-  else if(box == 4){
-    $.ajax({
-      url:"http://localhost:3001/faroeste",
-      dataType: 'json',
-      success: function(item){
-      
-      var indice = Math.floor(Math.random() * (item.length));
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DT_LANCAMENTO;
-      
-      }    
-  })
-  
-  }
-  else if(box == 5){
-    $.ajax({
-      url:"http://localhost:3001/fantasia",
-      dataType: 'json',
-      success: function(item){
-      
-      var indice = Math.floor(Math.random() * (item.length));
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DT_LANCAMENTO;
-      
-      }    
-  })
-  
-  }
-  else if(box == 6){
-    $.ajax({
-      url:"http://localhost:3001/drama",
-      dataType: 'json',
-      success: function(item){
-      
-      var indice = Math.floor(Math.random() * (item.length));
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DT_LANCAMENTO;
-      
-      }    
-  })
-  
-  }
-  else if(box == 7){
-    $.ajax({
-      url:"http://localhost:3001/comedia",
-      dataType: 'json',
-      success: function(item){
-      
-      var indice = Math.floor(Math.random() * (item.length));
-      document.getElementById("imgModal").src = item[indice].CARTAZ;
-      document.getElementById("tituloModal").innerHTML = item[indice].TITULO;
-      document.getElementById("sinopseModal").innerHTML = item[indice].SINOPSE;
-      document.getElementById("diretorModal").innerHTML = "Direção: " + item[indice].DIRETOR;
-      document.getElementById("lancamentoModal").innerHTML = "Data de Lançamento: " + item[indice].DATA_LANCAMENTO;
-      
-      }    
-  })
-  
-  }
-  //Abrir o Modal
-  abrirModal();
-
   globalObjects.btParar.style.visibility = "hidden";
-  
-}
 
-/* 
-* * * * * * * * * * * * * * * * 
-* Função para abrir o Modal   *
-* * * * * * * * * * * * * * * * 
-*/
+  const box = calcularBox();
+  const nomesGeneros = [
+      "Ação",     // 0
+      "Aventura", // 1
+      "Diverso",  // 2
+      "Suspense", // 3
+      "Faroeste", // 4
+      "Fantasia", // 5
+      "Drama",    // 6
+      "Comédia"   // 7
+  ];
+
+  const GENRE_MAP = {
+      "Ação": 28,
+      "Aventura": 12,
+      "Comédia": 35,
+      "Drama": 18,
+      "Fantasia": 14,
+      "Faroeste": 37,
+      "Suspense": 53,
+      "Diverso": null  // pega todos
+  };
+
+  const genero = nomesGeneros[box];
+  const generoId = GENRE_MAP[genero];
+
+  const url = new URL("https://api.themoviedb.org/3/discover/movie");
+  url.searchParams.set("with_origin_country", "BR");
+  url.searchParams.set("sort_by", "popularity.desc");
+  url.searchParams.set("language", "pt-BR");
+  if (generoId) {
+      url.searchParams.set("with_genres", generoId);
+  }
+
+  fetch(url.toString(), {
+      headers: {
+          accept: "application/json",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMWQ1MDExZGNkYWI3ZjU0OGRhNDM4ZmRhMjRjN2ViZCIsIm5iZiI6MTc1MDk5MTcxMC44NTY5OTk5LCJzdWIiOiI2ODVlMDM1ZWMwNjZhNDk0YzEzNGYyZDEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.bc5-4RE8_UXxp5d617Cw2LJfowA3x70_z_rVrU3hsa8"
+      }
+  })
+  .then(res => res.json())
+  .then(data => {
+      const filmes = data.results;
+      if (!filmes || filmes.length === 0) {
+          alert("Nenhum filme encontrado.");
+          return;
+      }
+
+      const filme = filmes[Math.floor(Math.random() * filmes.length)];
+      document.getElementById("imgModal").src = filme.poster_path ? `https://image.tmdb.org/t/p/w300${filme.poster_path}` : "";
+      document.getElementById("tituloModal").innerText = filme.title || "Sem título";
+      document.getElementById("sinopseModal").innerText = filme.overview || "Sem sinopse";
+      document.getElementById("diretorModal").innerText = ""; // TMDB não traz direto aqui
+      document.getElementById("lancamentoModal").innerText = "Ano: " + (filme.release_date?.substring(0, 4) || "Desconhecido");
+
+      abrirModal();
+  })
+  .catch(err => {
+      console.error("Erro ao buscar filme:", err);
+      alert("Erro ao buscar filme da API.");
+  });
+}
 
 function abrirModal() {
-  $(".modal").modal({
-    show: true
-    
-  })
-  ;
+  $("#ex1").modal("show");
 }
+

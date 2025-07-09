@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}FavoritosBR - Meus Filmes{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'baseFilmes/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<header class="site-header">
+    <div class="header-text">
+      {% if aba == "favoritos" %}
+        <h1>⭐ Favoritos</h1>
+      {% else %}
+        <h1>✅ Assistidos</h1>
+      {% endif %}
+    </div>
+</header>
+
+<main>
+  <div style="margin-bottom: 1em;">
+      {% if aba == "favoritos" %}
+          <a href="?aba=assistidos" class="botao-roleta">✅ Ver Assistidos</a>
+      {% else %}
+          <a href="?aba=favoritos" class="botao-roleta">⭐ Ver Favoritos</a>
+      {% endif %}
+  </div>
+
+  {% if aba == "favoritos" %}
+      <div class="filmes-grid">
+          {% for filme in favoritos %}
+              <div class="filme-card">
+                  {% if filme.poster %}
+                      <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
+                  {% else %}
+                      <div class="poster-placeholder">Sem imagem</div>
+                  {% endif %}
+                  <h3>{{ filme.titulo }}</h3>
+                  <p>{{ filme.created_at|date:"d/m/Y" }}</p>
+                  <div class="controle-assistido" data-filme-id="{{ filme.filme_id_api }}">
+                      <button class="marcar-assistido">✅ Marcar como assistido</button>
+
+                      <div class="nota-wrapper" style="display: none; margin-top: 0.5em;">
+                          <label>Nota:
+                              <select class="nota-filme">
+                                  <option value="">Escolha</option>
+                                  {% for i in "12345"|make_list %}
+                                      <option value="{{ i }}">{{ i }}</option>
+                                  {% endfor %}
+                              </select>
+                          </label>
+                          <button class="confirmar-assistido">🎉 Confirmar</button>
+                      </div>
+                  </div>
+              </div>
+          {% empty %}
+              <p>Você ainda não favoritou filmes.</p>
+          {% endfor %}
+      </div>
+  {% else %}
+      <div class="filmes-grid">
+          {% for filme in assistidos %}
+              <div class="filme-card">
+                  {% if filme.poster %}
+                      <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
+                  {% else %}
+                      <div class="poster-placeholder">Sem imagem</div>
+                  {% endif %}
+                  <h3>{{ filme.titulo }}</h3>
+                  <p>📅 Assistido em: {{ filme.assistiu_at|date:"d/m/Y" }}</p>
+                  {% if filme.nota %}
+                    <p>⭐ Nota:
+                        {% for i in "12345"|make_list %}
+                            {% if i <= filme.nota|stringformat:"s" %}
+                                <span style="color: gold;">★</span>
+                            {% else %}
+                                <span style="color: lightgray;">★</span>
+                            {% endif %}
+                        {% endfor %}
+                        ({{ filme.nota }}/5)
+                    </p>
+                {% else %}
+                    <p style="color: gray;">Sem nota atribuída</p>
+                {% endif %}
+              </div>
+          {% empty %}
+              <p>Você ainda não marcou filmes como assistidos.</p>
+          {% endfor %}
+      </div>
+  {% endif %}
+</main>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".marcar-assistido").forEach(botao => {
+          botao.addEventListener("click", () => {
+              const controle = botao.closest(".controle-assistido");
+              const notaWrapper = controle.querySelector(".nota-wrapper");
+              notaWrapper.style.display = "block";
+              botao.style.display = "none";
+          });
+      });
+  
+      document.querySelectorAll(".confirmar-assistido").forEach(botao => {
+          botao.addEventListener("click", () => {
+              const controle = botao.closest(".controle-assistido");
+              const filmeId = controle.getAttribute("data-filme-id");
+              const nota = controle.querySelector(".nota-filme").value;
+  
+              fetch("{% url 'marcar_como_assistido' %}", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "X-CSRFToken": "{{ csrf_token }}"
+                  },
+                  body: JSON.stringify({
+                      filme_id_api: parseInt(filmeId),
+                      nota: nota ? parseInt(nota) : null
+                  })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.sucesso) {
+                      location.reload();
+                  } else {
+                      alert("Erro ao marcar como assistido.");
+                  }
+              });
+          });
+      });
+  });
+  </script>
+  
+{% endblock %}
