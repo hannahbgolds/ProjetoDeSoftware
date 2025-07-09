@@ -98,3 +98,24 @@ def marcar_nao_assistido(request):
         except json.JSONDecodeError:
             return JsonResponse({"erro": "JSON inválido."}, status=400)
     return JsonResponse({"erro": "Método não permitido."}, status=405)
+
+def filmes_por_genero_api(request):
+    genero = request.GET.get("genero")
+
+    filmes = FilmeDeUmUsuario.objects.all()
+
+    if genero:
+        filmes = filmes.filter(Q(genero__iexact=genero) | Q(genero__icontains=genero))
+
+    filmes_unicos = {}
+    for f in filmes:
+        if f.titulo not in filmes_unicos:
+            filmes_unicos[f.titulo] = {
+                "titulo": f.titulo,
+                "poster": f.poster_url,
+                "sinopse": f.sinopse or "",
+                "diretor": f.diretor or "",
+                "ano": f.data_lancamento.year if f.data_lancamento else "",
+            }
+
+    return JsonResponse(list(filmes_unicos.values()), safe=False)
