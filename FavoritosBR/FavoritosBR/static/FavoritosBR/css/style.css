@@ -176,3 +176,18 @@ main {
     color: #ffcc00;
     border-bottom: 2px solid #ffcc00;
 }
+
+.remover-filme {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+}
+
+.filme-card {
+    position: relative;
+}

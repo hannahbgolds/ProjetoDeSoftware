@@ -31,6 +31,7 @@
       <div class="filmes-grid">
           {% for filme in favoritos %}
               <div class="filme-card">
+                <button class="remover-filme" data-filme-id="{{ filme.filme_id_api }}" data-titulo="{{ filme.titulo }}" data-poster="{{ filme.poster }}">❌</button>
                   {% if filme.poster %}
                       <img src="{{ filme.poster }}" alt="Pôster de {{ filme.titulo }}">
                   {% else %}
@@ -132,5 +133,39 @@
       });
   });
   </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".remover-filme").forEach(botao => {
+            botao.addEventListener("click", () => {
+                const filmeId = botao.getAttribute("data-filme-id");
+                const titulo = botao.getAttribute("data-titulo");
+                const poster = botao.getAttribute("data-poster");
+    
+                fetch("{% url 'marcar_nao_assistido' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({
+                        filme_id_api: parseInt(filmeId),
+                        titulo: titulo,
+                        poster_url: poster
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sucesso) {
+                        location.reload();
+                    } else {
+                        alert("Erro ao remover filme.");
+                    }
+                });
+            });
+        });
+    });
+    </script>
+    
   
 {% endblock %}
