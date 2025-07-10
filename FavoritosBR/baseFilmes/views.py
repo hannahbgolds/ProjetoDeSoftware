@@ -31,33 +31,56 @@ def filmes_lista(request):
         "Authorization": TMDB_API_TOKEN,
         "accept": "application/json"
     }
-    params = {
+
+    base_params = {
         "with_origin_country": "BR",
         "sort_by": "popularity.desc",
-        "language": "pt-BR"
+        "language": "pt-BR",
+        "vote_count.gte": 5,
+        "include_adult": False 
     }
-    if genero_id:
-        params["with_genres"] = genero_id
 
-    response = requests.get(url, headers=headers, params=params)
-    data = response.json()
+    if genero_id:
+        base_params["with_genres"] = genero_id
+
+    filmes = []
+    NUM_PAGINAS = 6 
+
 
     filmes_favoritados_ids = set(
         FilmeDeUmUsuario.objects.filter(user=request.user)
         .values_list('filme_id_api', flat=True)
     )
 
-    filmes = []
-    for filme in data.get("results", []):
-        id_api = filme.get("id")
-        filmes.append({
-            "titulo": filme.get("title"),
-            "filme_id_api": id_api,
-            "ano": filme.get("release_date", "")[:4],
-            "genero": genero_nome or "Vários",
-            "poster": f"https://image.tmdb.org/t/p/w200{filme.get('poster_path')}" if filme.get("poster_path") else None,
-            "favoritado": id_api in filmes_favoritados_ids
-        })
+    for pagina in range(1, NUM_PAGINAS + 1):
+        params = base_params.copy()
+        params["page"] = pagina
+
+        response = requests.get(url, headers=headers, params=params)
+        data = response.json()
+
+        for filme in data.get("results", []):
+            if filme.get("title") == "Pornô!":
+             continue
+            
+            if filme.get("title") == "Regra 34":
+             continue
+
+            if filme.get("title") == "Mulher Tentação":
+             continue
+            
+            if filme.get("title") == "Bruna Surfistinha":
+             continue
+
+            id_api = filme.get("id")
+            filmes.append({
+                "titulo": filme.get("title"),
+                "filme_id_api": id_api,
+                "ano": filme.get("release_date", "")[:4],
+                "genero": genero_nome or "Vários",
+                "poster": f"https://image.tmdb.org/t/p/w200{filme.get('poster_path')}" if filme.get("poster_path") else None,
+                "favoritado": id_api in filmes_favoritados_ids
+            })
 
     return render(request, "filmes_lista.html", {
         "filmes": filmes,
