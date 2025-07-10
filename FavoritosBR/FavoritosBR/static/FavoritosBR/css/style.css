@@ -191,3 +191,28 @@ main {
 .filme-card {
     position: relative;
 }
+
+.nota-wrapper {
+    max-width: 140px;
+    width: 100%;
+    padding: 0.5em;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    margin-top: 0.5em;
+    margin: 0.5em auto 0 auto; 
+    box-sizing: border-box;
+}
+
+.nota-wrapper select.nota-filme {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px;
+    font-size: 14px;
+}
+
+.nota-wrapper select.nota-filme,
+.nota-wrapper button.confirmar-assistido {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
