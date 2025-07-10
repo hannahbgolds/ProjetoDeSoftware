@@ -23,9 +23,9 @@ from FavoritosBR.views import custom_logout
 
 
 urlpatterns = [
-    path('', views.home),
+    path('', views.home, name='home'),
     path('admin/', admin.site.urls),
-    path('home', views.home, name='home'), 
+    path('home', views.home), 
     path("baseFilmes/", include('baseFilmes.urls')),
     path("usuarios/", include('usuarios.urls')),
     path('logout/', custom_logout, name='logout'),

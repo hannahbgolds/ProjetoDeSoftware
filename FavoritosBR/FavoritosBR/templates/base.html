@@ -13,17 +13,17 @@
             <img src="{% static 'FavoritosBR/img/favoritosBR.svg' %}" alt="Logo FavoritosBR" class="logoSite">
         </div>
         <div class="navbar-links">
-        <a href="/">Home</a>
-        <a href="{% url 'filmes' %}">Filmes</a>
+            <a href="/" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+            <a href="{% url 'filmes' %}" class="{% if request.resolver_match.url_name == 'filmes' %}active{% endif %}">Filmes</a>
 
-        {% if user.is_authenticated %}
-            <a href="{% url 'meus_filmes' %}">
-            <span>{{ user.username }}</span>
-            </a>
-            <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-        {% endif %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'meus_filmes' %}" class="{% if request.resolver_match.url_name == 'meus_filmes' %}active{% endif %}">
+                    <span>{{ user.username }}</span>
+                </a>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="{% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a>
+            {% endif %}
         </div>
     </nav>
 

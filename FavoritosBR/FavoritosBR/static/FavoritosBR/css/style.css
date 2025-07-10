@@ -171,4 +171,8 @@ main {
     color: #444;
 }
 
-
+.navbar a.active {
+    font-weight: bold;
+    color: #ffcc00;
+    border-bottom: 2px solid #ffcc00;
+}
