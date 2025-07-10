@@ -21,7 +21,6 @@ GENRE_MAP = {
     "Romance": 10749
 }
 
-@login_required
 def filmes_lista(request):
     genero_nome = request.GET.get("genero")
     genero_id = GENRE_MAP.get(genero_nome)
@@ -47,10 +46,14 @@ def filmes_lista(request):
     NUM_PAGINAS = 6 
 
 
-    filmes_favoritados_ids = set(
-        FilmeDeUmUsuario.objects.filter(user=request.user)
-        .values_list('filme_id_api', flat=True)
-    )
+    if request.user.is_authenticated:
+        filmes_favoritados_ids = set(
+            FilmeDeUmUsuario.objects.filter(user=request.user)
+            .values_list('filme_id_api', flat=True)
+        )
+    else:
+        filmes_favoritados_ids = set()
+
 
     for pagina in range(1, NUM_PAGINAS + 1):
         params = base_params.copy()

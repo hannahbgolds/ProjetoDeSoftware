@@ -49,18 +49,29 @@
                 {% endif %}
                 <h3>
                     {{ filme.titulo }}
-                    <img
-    src="{% if filme.favoritado %}
-             https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png
-         {% else %}
-             {% static 'baseFilmes/img/estrelaVazia.png' %}
-         {% endif %}"
-    class="botao-estrela"
-    data-titulo="{{ filme.titulo }}"
-    data-filme-id="{{ filme.filme_id_api }}"
-    data-ativo="{% if filme.favoritado %}true{% else %}false{% endif %}"
-    alt="Marcar como não assistido"
-/>
+                    {% if user.is_authenticated %}
+    <img
+        src="{% if filme.favoritado %}
+                 https://upload.wikimedia.org/wikipedia/commons/4/44/Plain_Yellow_Star.png
+             {% else %}
+                 {% static 'baseFilmes/img/estrelaVazia.png' %}
+             {% endif %}"
+        class="botao-estrela"
+        data-titulo="{{ filme.titulo }}"
+        data-filme-id="{{ filme.filme_id_api }}"
+        data-ativo="{% if filme.favoritado %}true{% else %}false{% endif %}"
+        alt="Marcar como não assistido"
+    />
+{% else %}
+    <img
+        src="{% static 'baseFilmes/img/estrelaVazia.png' %}"
+        class="botao-estrela"
+        alt="Login necessário para favoritar"
+        title="Faça login para favoritar"
+        style="filter: grayscale(100%); cursor: not-allowed;"
+    />
+{% endif %}
+
                 </h3>
                 <p>{{ filme.ano }}</p>
             </div>
